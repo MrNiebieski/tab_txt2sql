@@ -11,11 +11,17 @@ outname = tablename + ".sql"
 print outname
 re_tab = re.compile("\t")
 re_return = re.compile("\n")
+re_singlequote = re.compile("'")
+re_doublequote = re.compile('"')
+re_backslash = re.compile(r"\\")
 with open(filename) as infile:
 	line_list = infile.readlines()
 	outs = StringIO.StringIO()
 	for i, line in enumerate(line_list):
-		result = re_tab.sub("','", line)
+		result = re_singlequote.sub(r"\'", line)
+		result = re_doublequote.sub(r'\"', result)
+		result = re_backslash.sub(r"\\", result)
+		result = re_tab.sub("','", result)
 		result = re_return.sub("'),\n", result)
 		result = "('" + result
 		if i is 0:
